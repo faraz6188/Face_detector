@@ -63,7 +63,7 @@ st.markdown("<h1 class='title'>Face Detector by Faraz</h1>", unsafe_allow_html=T
 st.markdown("<h3 class='hh'>Detect Faces by Uploading Images</h3>", unsafe_allow_html=True)
 
 # Define the face detection model path
-cascade_path = '/Users/mdfarazali/Documents/AI ML/Projects/Face Detection/haarcascade_frontalface_default.xml'
+cascade_path = 'haarcascade_frontalface_default.xml'
 model = cv2.CascadeClassifier(cascade_path)
 
 # Directory to store detected faces
