@@ -1,8 +1,11 @@
+
+
 import cv2
 import streamlit as st
 import numpy as np
 from PIL import Image
 import os
+
 
 st.markdown(
     """
@@ -17,8 +20,8 @@ st.markdown(
         text-align: center;
         color: #6600cc; /* A nice purple color */
         font-size: 50px; /* Larger font size */
-        margin-top: 0px;
-        margin-bottom: 0px; /* Space below the title */
+        margin-top: 10px;
+        margin-bottom: 10px; /* Space below the title */
     }
     .hh{
         text-align: center;
@@ -49,7 +52,7 @@ st.markdown(
 
     .stButton > button:hover {
         color: white;
-        background-color: green; /* light purple on hover */
+        background-color: green; /* light pruple on hover */
         border-style: solid;
         border-color: black;
     }
@@ -58,11 +61,11 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("<h1 class='title'>Face Detector by Faraz</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='title'>Face Recognition Attendance System</h1>", unsafe_allow_html=True)
 st.markdown("<h3 class='hh'>Detect Faces by Uploading Images</h3>", unsafe_allow_html=True)
 
-# Load the Haar Cascade model
-cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+# Define the face detection model path
+cascade_path = '/Users/mdfarazali/Documents/AI ML/Projects/Face Detection/haarcascade_frontalface_default.xml'
 model = cv2.CascadeClassifier(cascade_path)
 
 # Directory to store detected faces
@@ -99,6 +102,8 @@ def detect_faces_in_image(uploaded_image):
     st.image(img_array, channels="BGR", use_column_width=True)
     return img_array, faces
 
+# Detect faces in real-time from the webcam and then allow saving
+
 # File uploader to detect faces in an uploaded image
 uploaded_image = st.file_uploader("Upload Image to detect", type=["jpg", "png", "jpeg"], key="uploaded_image")
 if uploaded_image is not None:
@@ -116,49 +121,4 @@ if uploaded_image is not None:
                 save_face(img_array, face_coords, custom_name)
 
 # Button to open the camera for live face detection
-st.markdown("<h3 class='hh'>Either Open Camera & Detect Faces</h3>", unsafe_allow_html=True)
-
-# Detect faces in real-time from the webcam with custom naming
-def detect_faces_in_camera(custom_name):
-    cap = cv2.VideoCapture(0)
-    st_frame = st.empty()
-    face_saved = False
-
-    while not face_saved:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = model.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5, minSize=(30, 30))
-
-        for (x, y, w, h) in faces:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            save_face(frame, (x, y, w, h), custom_name)
-            face_saved = True
-            break  # Stop processing after saving the first face
-
-        st_frame.image(frame, channels="BGR")
-
-    cap.release()
-    cv2.destroyAllWindows()
-    if face_saved:
-        st.success("Face captured and saved. Camera closed.")
-
-# Main interface for face detection
-custom_name = st.text_input("Enter Your Name") 
-
-if st.button("Open Camera"):           
-    detect_faces_in_camera(custom_name)
-
-st.write("Please note that camera access permissions are managed by Hugging Face, which is why the 'Open Camera' button may not function as expected.")
-st.write("However, the underlying code performs optimally when run in a local environment.")
-
-# Sidebar for displaying the video
-st.sidebar.title("Watch the Video of Demo")
-
-# YouTube video link
-video_url = "https://www.youtube.com/watch?v=Rw2tE-e-0pY?si=SGMwZZNpbJe-WAa3"  # Replace with your YouTube video URL
-st.sidebar.video(video_url)
-
 
